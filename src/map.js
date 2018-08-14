@@ -21,6 +21,18 @@ export function initMap(ymaps, containerId) {
 
   objectManager.clusters.options.set('preset', 'islands#greenClusterIcons');
 
+  objectManager.clusters.events.add('add', function (e) {
+      var cluster = objectManager.clusters.getById(e.get('objectId')),
+          objects = cluster.properties.geoObjects;
+
+      for(const object of objects) {
+        if(!object.isActive) {
+          objectManager.clusters.setClusterOptions(cluster.id, { preset: 'islands#redClusterIcons'})
+          break;
+        }
+      }
+  });
+
   loadList().then(data => {
     objectManager.add(data);
   });
